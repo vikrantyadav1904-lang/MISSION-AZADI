@@ -72,3 +72,699 @@ function finish(){
  document.getElementById("message").innerHTML="Rank: <b>"+rank+"</b><br>Jai Hind 🇮🇳";
  localStorage.setItem("MissionAzadiBest",Math.max(score,+(localStorage.getItem("MissionAzadiBest")||0)));
 }
+/*=========================================
+MISSION AZADI V2
+RPS GROUP OF SCHOOLS
+Designed by Ms. Rashi Rohilla
+=========================================*/
+
+let playerName = "";
+let difficulty = "easy";
+
+let questionPool = [];
+let currentQuestions = [];
+let currentQuestion = 0;
+
+let score = 0;
+let xp = 0;
+let coins = 0;
+let lives = 3;
+
+let timer = 20;
+let timerInterval = null;
+
+const loadingScreen = document.getElementById("loadingScreen");
+const game = document.getElementById("game");
+
+const enterBtn = document.getElementById("enterGame");
+const startBtn = document.getElementById("startQuiz");
+
+const questionBox = document.getElementById("question");
+const answersBox = document.getElementById("answers");
+
+const qNo = document.getElementById("qNo");
+const timerText = document.getElementById("timer");
+
+const xpText = document.getElementById("xp");
+const livesText = document.getElementById("lives");
+const coinsText = document.getElementById("coins");
+const rankText = document.getElementById("rank");
+
+const progressFill = document.getElementById("progressFill");
+
+const resultScreen = document.getElementById("resultScreen");
+
+const quizArea = document.getElementById("quizArea");
+
+enterBtn.addEventListener("click",()=>{
+
+loadingScreen.style.display="none";
+
+game.classList.remove("hidden");
+
+});
+
+startBtn.addEventListener("click",startMission);
+
+function startMission(){
+
+playerName=document.getElementById("name").value.trim();
+
+if(playerName===""){
+
+alert("Please enter your name");
+
+return;
+
+}
+
+difficulty=document.getElementById("difficulty").value;
+
+document.getElementById("playerName").textContent=playerName;
+
+questionPool=[...questions];
+
+shuffle(questionPool);
+
+currentQuestions=questionPool.slice(0,20);
+
+currentQuestion=0;
+
+score=0;
+
+xp=0;
+
+coins=0;
+
+lives=3;
+
+updateHUD();
+
+document.querySelector(".hero").classList.add("hidden");
+
+quizArea.classList.remove("hidden");
+
+loadQuestion();
+
+}
+
+function loadQuestion(){
+
+clearInterval(timerInterval);
+
+timer=20;
+
+timerText.textContent=timer;
+
+timerInterval=setInterval(updateTimer,1000);
+
+const q=currentQuestions[currentQuestion];
+
+qNo.textContent=currentQuestion+1;
+
+progressFill.style.width=((currentQuestion)/20)*100+"%";
+
+questionBox.textContent=q.question;
+
+answersBox.innerHTML="";
+
+let options=[...q.options];
+
+shuffle(options);
+
+options.forEach(option=>{
+
+const btn=document.createElement("button");
+
+btn.className="answerBtn";
+
+btn.textContent=option;
+
+btn.onclick=()=>checkAnswer(btn,q.answer);
+
+answersBox.appendChild(btn);
+
+});
+
+}
+
+function checkAnswer(button,correct){
+
+clearInterval(timerInterval);
+
+const buttons=document.querySelectorAll(".answerBtn");
+
+buttons.forEach(b=>b.disabled=true);
+
+if(button.textContent===correct){
+
+button.classList.add("correct");
+
+score++;
+
+xp+=20;
+
+coins+=10;
+
+}else{
+
+button.classList.add("wrong");
+
+lives--;
+
+buttons.forEach(b=>{
+
+if(b.textContent===correct){
+
+b.classList.add("correct");
+
+}
+
+});
+
+}
+
+updateHUD();
+
+setTimeout(nextQuestion,1500);
+
+}
+
+function nextQuestion(){
+
+if(lives<=0){
+
+finishGame();
+
+return;
+
+}
+
+currentQuestion++;
+
+if(currentQuestion>=20){
+
+finishGame();
+
+return;
+
+}
+
+loadQuestion();
+
+}
+
+function updateTimer(){
+
+timer--;
+
+timerText.textContent=timer;
+
+if(timer<=0){
+
+clearInterval(timerInterval);
+
+lives--;
+
+updateHUD();
+
+setTimeout(nextQuestion,800);
+
+}
+
+}
+
+function updateHUD(){
+
+xpText.textContent=xp;
+
+livesText.textContent=lives;
+
+coinsText.textContent=coins;
+
+rankText.textContent=getRank();
+
+}
+/*=========================================
+MISSION AZADI V2
+SCRIPT.JS PART 2
+=========================================*/
+
+function finishGame(){
+
+clearInterval(timerInterval);
+
+quizArea.classList.add("hidden");
+
+resultScreen.classList.remove("hidden");
+
+let accuracy=Math.round((score/20)*100);
+
+document.getElementById("finalPlayer").textContent=playerName;
+
+document.getElementById("finalScore").textContent=score;
+
+document.getElementById("accuracy").textContent=accuracy+"%";
+
+document.getElementById("earnedXP").textContent=xp;
+
+document.getElementById("earnedCoins").textContent=coins;
+
+document.getElementById("finalRank").textContent=getRank();
+
+document.getElementById("resultTitle").textContent=getRank();
+
+document.getElementById("certificateName").textContent=playerName;
+
+document.getElementById("certificateScore").textContent=score+"/20";
+
+document.getElementById("certificatePercent").textContent=accuracy+"%";
+
+document.getElementById("certificateRank").textContent=getRank();
+
+saveLeaderboard();
+
+launchFireworks();
+
+}
+
+function getRank(){
+
+if(xp>=350) return "🏆 Legend of Azadi";
+
+if(xp>=250) return "🥇 Freedom Fighter";
+
+if(xp>=180) return "🥈 Patriot";
+
+if(xp>=80) return "🥉 Volunteer";
+
+return "Cadet";
+
+}
+
+function shuffle(array){
+
+for(let i=array.length-1;i>0;i--){
+
+const j=Math.floor(Math.random()*(i+1));
+
+[array[i],array[j]]=[array[j],array[i]];
+
+}
+
+}
+
+function saveLeaderboard(){
+
+let board=JSON.parse(localStorage.getItem("azadiBoard"))||[];
+
+board.push({
+
+name:playerName,
+
+score:score,
+
+xp:xp,
+
+date:new Date().toLocaleDateString()
+
+});
+
+board.sort((a,b)=>b.score-a.score);
+
+board=board.slice(0,10);
+
+localStorage.setItem("azadiBoard",JSON.stringify(board));
+
+displayLeaderboard();
+
+}
+
+function displayLeaderboard(){
+
+const body=document.getElementById("leaderboardTable");
+
+if(!body) return;
+
+body.innerHTML="";
+
+let board=JSON.parse(localStorage.getItem("azadiBoard"))||[];
+
+board.forEach((item,index)=>{
+
+body.innerHTML+=`
+
+<tr>
+
+<td>${index+1}</td>
+
+<td>${item.name}</td>
+
+<td>${item.score}/20</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+document.getElementById("leaderboardBtn").onclick=function(){
+
+document.getElementById("leaderboard").classList.remove("hidden");
+
+displayLeaderboard();
+
+};
+
+document.getElementById("closeLeaderboard").onclick=function(){
+
+document.getElementById("leaderboard").classList.add("hidden");
+
+};
+
+document.getElementById("playAgain").onclick=function(){
+
+location.reload();
+
+};
+
+document.getElementById("showCertificate").onclick=function(){
+
+resultScreen.classList.add("hidden");
+
+document.getElementById("certificateScreen").classList.remove("hidden");
+
+};
+
+document.getElementById("backHome").onclick=function(){
+
+location.reload();
+
+};
+
+function launchFireworks(){
+
+const box=document.getElementById("fireworks");
+
+if(!box) return;
+
+box.innerHTML="";
+
+for(let i=0;i<40;i++){
+
+let spark=document.createElement("div");
+
+spark.style.position="fixed";
+
+spark.style.width="8px";
+
+spark.style.height="8px";
+
+spark.style.borderRadius="50%";
+
+spark.style.left=Math.random()*100+"vw";
+
+spark.style.top=Math.random()*100+"vh";
+
+spark.style.background=`hsl(${Math.random()*360},100%,60%)`;
+
+spark.style.pointerEvents="none";
+
+spark.style.animation="explode 1.8s ease-out forwards";
+
+box.appendChild(spark);
+
+}
+
+setTimeout(()=>{
+
+box.innerHTML="";
+
+},2000);
+
+}
+
+function createParticles(){
+
+const area=document.getElementById("particles");
+
+if(!area) return;
+
+for(let i=0;i<40;i++){
+
+let p=document.createElement("span");
+
+p.style.left=Math.random()*100+"vw";
+
+p.style.animationDuration=(5+Math.random()*6)+"s";
+
+p.style.animationDelay=Math.random()*5+"s";
+
+area.appendChild(p);
+
+}
+
+}
+
+window.onload=function(){
+
+createParticles();
+
+displayLeaderboard();
+
+};
+
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Enter" && document.querySelector(".hero") && !document.querySelector(".hero").classList.contains("hidden")){
+
+startMission();
+
+}
+
+});
+const questions = [
+
+{
+question:"Who announced the Partition of Bengal in 1905?",
+options:[
+"Lord Curzon",
+"Lord Mountbatten",
+"Lord Irwin",
+"Lord Wavell"
+],
+answer:"Lord Curzon"
+},
+
+{
+question:"The Partition of Bengal took place in which year?",
+options:[
+"1905",
+"1919",
+"1915",
+"1930"
+],
+answer:"1905"
+},
+
+{
+question:"The Swadeshi Movement encouraged Indians to:",
+options:[
+"Use foreign goods",
+"Boycott British goods",
+"Support British rule",
+"Join the British Army"
+],
+answer:"Boycott British goods"
+},
+
+{
+question:"Who returned to India from South Africa in 1915?",
+options:[
+"Mahatma Gandhi",
+"Jawaharlal Nehru",
+"Subhas Chandra Bose",
+"Bal Gangadhar Tilak"
+],
+answer:"Mahatma Gandhi"
+},
+
+{
+question:"Where did Gandhi launch his first Satyagraha in India?",
+options:[
+"Champaran",
+"Delhi",
+"Bombay",
+"Kolkata"
+],
+answer:"Champaran"
+},
+
+{
+question:"The Rowlatt Act was passed in:",
+options:[
+"1919",
+"1935",
+"1905",
+"1942"
+],
+answer:"1919"
+},
+
+{
+question:"Jallianwala Bagh massacre took place in:",
+options:[
+"Amritsar",
+"Delhi",
+"Lucknow",
+"Ahmedabad"
+],
+answer:"Amritsar"
+},
+
+{
+question:"Who ordered the firing at Jallianwala Bagh?",
+options:[
+"General Dyer",
+"Lord Curzon",
+"Lord Mountbatten",
+"Lord Irwin"
+],
+answer:"General Dyer"
+},
+
+{
+question:"Non-Cooperation Movement started in:",
+options:[
+"1920",
+"1930",
+"1942",
+"1915"
+],
+answer:"1920"
+},
+
+{
+question:"Which movement is associated with Salt March?",
+options:[
+"Civil Disobedience Movement",
+"Quit India",
+"Swadeshi Movement",
+"Khilafat Movement"
+],
+answer:"Civil Disobedience Movement"
+},
+
+{
+question:"The Dandi March started in:",
+options:[
+"1930",
+"1919",
+"1942",
+"1905"
+],
+answer:"1930"
+},
+
+{
+question:"Who led the Dandi March?",
+options:[
+"Mahatma Gandhi",
+"Bhagat Singh",
+"Sardar Patel",
+"Tilak"
+],
+answer:"Mahatma Gandhi"
+},
+
+{
+question:"The slogan 'Do or Die' was given during:",
+options:[
+"Quit India Movement",
+"Swadeshi Movement",
+"Civil Disobedience",
+"Khilafat"
+],
+answer:"Quit India Movement"
+},
+
+{
+question:"Quit India Movement began in:",
+options:[
+"1942",
+"1930",
+"1919",
+"1947"
+],
+answer:"1942"
+},
+
+{
+question:"Who founded the Indian National Army?",
+options:[
+"Subhas Chandra Bose",
+"Bhagat Singh",
+"Gandhi",
+"Nehru"
+],
+answer:"Subhas Chandra Bose"
+},
+
+{
+question:"India became independent on:",
+options:[
+"15 August 1947",
+"26 January 1950",
+"2 October 1947",
+"15 August 1946"
+],
+answer:"15 August 1947"
+},
+
+{
+question:"Who was the first Prime Minister of independent India?",
+options:[
+"Jawaharlal Nehru",
+"Sardar Patel",
+"Rajendra Prasad",
+"Subhas Chandra Bose"
+],
+answer:"Jawaharlal Nehru"
+},
+
+{
+question:"Which commission was boycotted with the slogan 'Simon Go Back'?",
+options:[
+"Simon Commission",
+"Hunter Commission",
+"Cripps Mission",
+"Cabinet Mission"
+],
+answer:"Simon Commission"
+},
+
+{
+question:"Purna Swaraj was declared in:",
+options:[
+"1929",
+"1935",
+"1942",
+"1919"
+],
+answer:"1929"
+},
+
+{
+question:"Who was known as the Iron Man of India?",
+options:[
+"Sardar Vallabhbhai Patel",
+"Jawaharlal Nehru",
+"Gandhi",
+"Tilak"
+],
+answer:"Sardar Vallabhbhai Patel"
+}
+
+];
