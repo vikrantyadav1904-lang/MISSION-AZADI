@@ -112,3 +112,236 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mission Azadi | RPS Group of Schools</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div id="loadingScreen">
+
+<div class="overlay"></div>
+
+<div class="intro">
+
+<div class="flag"></div>
+
+<h2 class="school">
+RPS GROUP OF SCHOOLS
+</h2>
+
+<h1 class="title">
+MISSION AZADI
+</h1>
+
+<h3 class="subtitle">
+India's Freedom Journey (1900–1947)
+</h3>
+
+<p class="credit">
+Designed by<br>
+<b>Ms. Rashi Rohilla</b>
+</p>
+
+<div class="chakra"></div>
+
+<button id="enterGame">
+BEGIN MISSION
+</button>
+
+</div>
+
+</div>
+
+<div id="game" class="hidden">
+
+<header>
+
+<div class="logo">
+
+MISSION AZADI
+
+</div>
+
+<div class="playerInfo">
+
+<div class="infoCard">
+
+👤
+
+<span id="playerName">
+Guest
+</span>
+
+</div>
+
+<div class="infoCard">
+
+⭐ XP
+
+<span id="xp">
+0
+</span>
+
+</div>
+
+<div class="infoCard">
+
+❤️ Lives
+
+<span id="lives">
+3
+</span>
+
+</div>
+
+<div class="infoCard">
+
+🪙 Coins
+
+<span id="coins">
+0
+</span>
+
+</div>
+
+<div class="infoCard">
+
+🏆 Rank
+
+<span id="rank">
+Cadet
+</span>
+
+</div>
+
+</div>
+
+</header>
+
+<section class="hero">
+
+<h1>
+
+MISSION AZADI
+
+</h1>
+
+<p>
+
+Become a Young Freedom Volunteer and test your knowledge of India's struggle for Independence.
+
+</p>
+
+<div class="startBox">
+
+<input
+
+type="text"
+
+id="name"
+
+placeholder="Enter Your Name"
+
+maxlength="30">
+
+<select id="difficulty">
+
+<option value="easy">
+
+Easy
+
+</option>
+
+<option value="medium">
+
+Medium
+
+</option>
+
+<option value="hard">
+
+Hard
+
+</option>
+
+</select>
+
+<button id="startQuiz">
+
+START MISSION
+
+</button>
+
+</div>
+
+</section>
+
+<section id="quizArea" class="hidden">
+
+<div class="topBar">
+
+<div>
+
+Question
+
+<span id="qNo">
+
+1
+
+</span>
+
+/20
+
+</div>
+
+<div>
+
+⏱
+
+<span id="timer">
+
+20
+
+</span>
+
+</div>
+
+</div>
+
+<div class="progress">
+
+<div id="progressFill">
+
+</div>
+
+</div>
+
+<div class="questionCard">
+
+<h2 id="question">
+
+Question appears here
+
+</h2>
+
+<div id="answers">
+
+</div>
+
+</div>
+
+</section>
