@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mission Azadi - India's Freedom Journey</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HOME SCREEN -->
+
+    <div id="homeScreen" class="screen active">
+
+        <h1 class="title">
+            🇮🇳 Mission Azadi 🇮🇳
+        </h1>
+
+        <p class="subtitle">
+            India's Freedom Journey (1905–1947)
+        </p>
+
+        <input
+            type="text"
+            id="playerName"
+            placeholder="Enter Your Name">
+
+        <button id="startBtn">
+            🚩 Start Mission
+        </button>
+
+    </div>
+
+
+    <!-- GAME SCREEN -->
+
+    <div id="gameScreen" class="screen">
+
+        <div class="topbar">
+
+            <span>
+                👤
+                <span id="showName"></span>
+            </span>
+
+            <span>
+                ❤️
+                <span id="lives">3</span>
+            </span>
+
+            <span>
+                ⭐
+                <span id="score">0</span>
+            </span>
+
+            <span>
+                📖 Question
+                <span id="questionNo">1</span>/10
+            </span>
+
+        </div>
+
+        <div class="card">
+
+            <h2 id="question">
+                Loading...
+            </h2>
+
+            <div id="answers">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULT SCREEN -->
+
+    <div id="resultScreen" class="screen">
+
+        <h1>
+            🎉 Mission Completed
+        </h1>
+
+        <h2 id="finalName"></h2>
+
+        <h3>
+            Final Score
+        </h3>
+
+        <h1 id="finalScore"></h1>
+
+        <p id="message"></p>
+
+        <button onclick="location.reload()">
+            🔄 Play Again
+        </button>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
